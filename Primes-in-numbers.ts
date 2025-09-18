@@ -74,3 +74,52 @@ export const primeFactors = (n:number): string => {
   }
   return result;
 }
+
+
+// SOLUTION 3:
+export const primeFactors = (n:number): string => {
+  const factors: number[] = findFactors(n);
+  const counts: Map<number, number> = getCounts(factors);
+  let output = "";
+  
+  for (const count of counts) {
+    const key: number = count[0];
+    const value: number = count[1];
+    output = output.concat(value === 1 ? `(${key})` : `(${key}**${value})`);
+  }
+  
+  return output;
+}
+
+const getCounts = (nums: number[]): Map<number, number> => {
+  const counts: Map<number, number> = new Map();
+
+  for (const num of nums) {
+    const count = counts.get(num);
+    counts.set(num, count === undefined ? 1 : count + 1);
+  }
+  
+  return counts;
+}
+
+const findFactors = (n: number): number[] => {
+  let factors: number[] = [];
+  for (let i: number = 0; i <= n; ++i) {
+    if (isFactor(n, i) && isPrime(i)) {
+      factors.push(i);
+      n /= i;
+      i = 0;
+    }
+  }
+  return factors;
+} 
+
+const isFactor = (dividend: number, divisor: number): boolean => {
+  return dividend % divisor === 0;
+}
+  
+const isPrime = (num: number): boolean => {
+  for(let i = 2, s = Math.sqrt(num); i <= s; i++)
+      if(num % i === 0) return false; 
+  return num > 1;
+}
